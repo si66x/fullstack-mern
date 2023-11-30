@@ -1,64 +1,100 @@
+import { useState } from "react";
+
 const App = () => {
-  const course = "Half Stack application development";
-  const part1 = "Fundamentals of React";
-  const exercises1 = 10;
-  const part2 = "Using props to pass data";
-  const exercises2 = 7;
-  const part3 = "State of a component";
-  const exercises3 = 14;
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+  const goodButtonHandler = () => {
+    setGood(good + 1);
+  };
+  const badButtonHandler = () => {
+    setBad(bad + 1);
+  };
+  const neutralButtonHandler = () => {
+    setNeutral(neutral + 1);
+  };
 
+  const all = good + neutral + bad;
+  const average = (good - bad) / all;
+  const positive = good / all;
   return (
     <div>
-      <Header course={course} />
-      <Content
-        part1={part1}
-        exercise1={exercises1}
-        part2={part2}
-        exercise2={exercises2}
-        part3={part3}
-        exercise3={exercises3}
+      <Judul />
+      <Button name="good" buttonHandler={goodButtonHandler} />
+      <Button name="neutral" buttonHandler={neutralButtonHandler} />
+      <Button name="bad" buttonHandler={badButtonHandler} />
+      <Statistic
+        good={good}
+        neutral={neutral}
+        bad={bad}
+        all={all}
+        average={average}
+        positive={positive}
       />
-
-      <Total
-        exercise1={exercises1}
-        exercise2={exercises2}
-        exercise3={exercises3}
-      />
     </div>
   );
 };
 
-const Header = (props) => {
+const Judul = () => {
   return (
     <div>
-      <p>{props.course}</p>
+      <h1>
+        <b>give feedback</b>
+      </h1>
     </div>
   );
 };
 
-const Content = (props) => {
+const Button = ({ name, buttonHandler }) => {
   return (
     <div>
-      <p>
-        {props.part1} : {props.exercise1}
-      </p>
-      <p>
-        {props.part2} : {props.exercise2}
-      </p>
-      <p>
-        {props.part3} : {props.exercise3}
-      </p>
+      <button onClick={buttonHandler}>{name}</button>
     </div>
   );
 };
 
-const Total = (props) => {
+const Statistic = ({ good, bad, neutral, all, average, positive }) => {
   return (
     <div>
-      <p>
-        Number of exercises :
-        {props.exercise1 + props.exercise2 + props.exercise3}
-      </p>
+      <table>
+        <tbody>
+          <tr>
+            <th>
+              <h3>Statistic</h3>
+            </th>
+          </tr>
+          <tr>
+            <td>
+              <p>good {good}</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p>neutral {neutral}</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p>bad {bad}</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p>all {all}</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p>average {average}</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p>positive {positive}</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 };

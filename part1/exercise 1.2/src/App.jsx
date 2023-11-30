@@ -1,72 +1,91 @@
-const App = () => {
-  const course = "Half Stack application development";
-  // const part1 = "Fundamentals of React";
-  // const exercises1 = 10;
-  // const part2 = "Using props to pass data";
-  // const exercises2 = 7;
-  // const part3 = "State of a component";
-  // const exercises3 = 14;
+import { useState } from "react";
 
-  const objCourse = {
-    part1: "Fundamentals of React",
-    exercises1: 10,
-    part2: "Using props to pass data",
-    exercises2: 7,
-    part3: "State of a component",
-    exercises3: 14,
+const App = () => {
+  const anecdotes = [
+    "If it hurts, do it more often.",
+    "Adding manpower to a late software project makes it later!",
+    "The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
+    "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
+    "Premature optimization is the root of all evil.",
+    "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
+    "Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.",
+    "The only way to go fast, is to go well.",
+  ];
+
+  const [selected, setSelected] = useState(0);
+  const [vote, setVote] = useState(Array(anecdotes.length).fill(0));
+  const nextAnecdoteHandler = () => {
+    setSelected(Math.floor(Math.random() * anecdotes.length));
+  };
+  const voteHandler = () => {
+    const copy = [...vote];
+    copy[selected] += 1;
+    setVote(copy);
   };
 
+  const mostVotedIndex = findBiggestIndex(vote);
+  const mostVotedContainer = findBiggestContainer(vote);
+
   return (
     <div>
-      <Header course={course} />
-      <Content data={objCourse} />
-
-      <Total
-        exercise1={objCourse.exercises1}
-        exercise2={objCourse.exercises2}
-        exercise3={objCourse.exercises3}
-      />
+      <h1>Anecdote of the dat</h1>
+      {anecdotes[selected]}
+      <Button name={"next anecdote"} handler={nextAnecdoteHandler} />
+      <p>has {vote[selected]} votes</p>
+      <Button name={"vote"} handler={voteHandler} />
+      <h1>Most voted</h1>
+      <p>{anecdotes[mostVotedIndex]}</p>
+      <p>has {mostVotedContainer}</p>
     </div>
   );
 };
 
-const Total = (props) => {
+const Button = ({ name, handler }) => {
   return (
     <div>
-      <p>
-        Number of exercises :
-        {props.exercise1 + props.exercise2 + props.exercise3}
-      </p>
+      <button onClick={handler}>{name}</button>
     </div>
   );
 };
 
-const Header = (props) => {
-  return (
-    <div>
-      <p>{props.course}</p>
-    </div>
-  );
+function quickSort(array) {
+  if (array.length < 2) {
+    return array;
+  } else {
+    let smaller = [];
+    let bigger = [];
+    const pivot = array[0];
+    for (let index = 0; index < array.length; index++) {
+      if (array[index] < pivot) {
+        smaller.push(array[index]);
+      }
+      if (array[index] > pivot) {
+        bigger.push(array[index]);
+      }
+    }
+    return quickSort(smaller).concat([pivot], quickSort(bigger));
+  }
+}
+
+const findBiggestIndex = (array) => {
+  let assumeBiggest = array[0];
+  let indexBiggest = 0;
+  for (let index = 0; index < array.length; index++) {
+    if (array[index] > assumeBiggest) {
+      indexBiggest = index;
+    }
+  }
+  return indexBiggest;
 };
 
-const Content = ({ data }) => {
-  return (
-    <div>
-      <Part part={data.part1} exercise={data.exercise1} />
-      <Part part={data.part2} exercise={data.exercise2} />
-      <Part part={data.part3} exercise={data.exercise3} />
-    </div>
-  );
-};
-
-const Part = (props) => {
-  return (
-    <div>
-      <p>
-        {props.part} {props.exercise}
-      </p>
-    </div>
-  );
+const findBiggestContainer = (array) => {
+  let assumeBiggest = array[0];
+  for (let index = 0; index < array.length; index++) {
+    if (array[index] > assumeBiggest) {
+      assumeBiggest = array[index];
+    }
+  }
+  return assumeBiggest;
 };
 
 export default App;
